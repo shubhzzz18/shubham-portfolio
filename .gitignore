@@ -1,0 +1,12 @@
+# Node / frontend
+node_modules/
+dist/
+build/
+
+# Env / secrets
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db

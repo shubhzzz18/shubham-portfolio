@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shubham Dev Studio | Full Stack Developer & Automation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              primaryDark: "#4f46e5",
+              secondary: "#06b6d4",
+              accent: "#22c55e",
+            },
+            boxShadow: {
+              soft: "0 18px 45px rgba(15,23,42,0.55)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons (Remixicon) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- Razorpay Checkout (future payments) -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: #4b5563;
+      }
+      .fade-up {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 0.8s ease-out forwards;
+      }
+      .fade-up-delay {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeUp 1s ease-out forwards;
+      }
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-900 text-slate-100 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100"
+  >
+    <div id="root"></div>
+
+    <!-- React + ReactDOM + Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // ======================
+      // Data
+      // ======================
+
+      const skills = [
+        { name: "HTML / CSS / JavaScript", level: "Advanced" },
+        { name: "React & Tailwind CSS", level: "Intermediate" },
+        { name: "Node.js & Express", level: "Intermediate" },
+        { name: "MongoDB / MySQL", level: "Intermediate" },
+        { name: "REST API Integration", level: "Intermediate" },
+        { name: "Git, GitHub & Deployment", level: "Intermediate" },
+      ];
+
+      const stack = [
+        "React",
+        "Tailwind CSS",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "MySQL",
+        "REST APIs",
+        "JSON / Axios",
+        "Git & GitHub",
+        "Render / Vercel / Netlify",
+      ];
+
+      const projects = [
+        {
+          title: "CricSpectra – Cricket Analytics & Live Scores",
+          tag: "Featured",
+          category: "Sports",
+          description:
+            "Modern cricket platform with live scores, player insights, fixtures and news, designed for fans and fantasy players.",
+          tech: ["React", "Tailwind", "Cricket API Integration"],
+          role: "Full Stack Developer",
+          linkDemo: "#",
+          linkCode: "#",
+        },
+        {
+          title: "EduVerse – Diploma Student Learning Portal",
+          tag: "Education",
+          category: "Education",
+          description:
+            "A learning portal for diploma IT students with authentication, course content, progress tracking and dashboards.",
+          tech: ["Node.js", "Express", "MongoDB", "JWT Auth"],
+          role: "Full Stack Developer",
+          linkDemo: "#",
+          linkCode: "#",
+        },
+        {
+          title: "WhatsApp Bot Demo – Local Shop Automation",
+          tag: "Automation",
+          category: "Automation",
+          description:
+            "A WhatsApp chatbot demo that provides product details, opening hours and a simple order flow for local businesses.",
+          tech: ["Node.js", "WhatsApp Cloud API", "Webhooks"],
+          role: "Backend & Integration",
+          linkDemo: "#",
+          linkCode: "#",
+        },
+        {
+          title: "Billing & Attendance Tool – Coaching Classes",
+          tag: "Business",
+          category: "Business",
+          description:
+            "A lightweight billing and attendance web tool for coaching institutes and small shops with basic analytics.",
+          tech: ["JavaScript", "Node.js", "Database"],
+          role: "Full Stack Developer",
+          linkDemo: "#",
+          linkCode: "#",
+        },
+      ];
+
+      const services = [
+        {
+          icon: "ri-macbook-line",
+          title: "Modern Website Development",
+          description:
+            "Clean, fast and responsive websites for shops, classes, gyms, professionals and small businesses.",
+        },
+        {
+          icon: "ri-robot-2-line",
+          title: "WhatsApp Bot & Automation",
+          description:
+            "Chatbots for auto replies, FAQs, lead capture and product information directly on WhatsApp.",
+        },
+        {
+          icon: "ri-database-2-line",
+          title: "Custom Tools & Dashboards",
+          description:
+            "Billing systems, attendance tools, portals and dashboards tailored to your workflow.",
+        },
+        {
+          icon: "ri-line-chart-line",
+          title: "Sports Data & Analytics",
+          description:
+            "CricSpectra-style dashboards, match insights and analytics for cricket fans and platforms.",
+        },
+      ];
+
+      const pricingPlans = [
+        {
+          name: "Basic Website",
+          price: 2999,
+          idealFor: "Single-page info sites and personal portfolios.",
+          features: [
+            "1-page modern website",
+            "Responsive design",
+            "Basic contact form",
+            "Delivery in 3–5 working days",
+          ],
+          popular: false,
+        },
+        {
+          name: "Standard Business",
+          price: 5999,
+          idealFor: "Local shops, coaching classes, gyms and service providers.",
+          features: [
+            "3–5 pages (Home, About, Services, Contact, etc.)",
+            "WhatsApp contact button + basic SEO",
+            "Basic content updates support",
+            "Delivery in 7–10 working days",
+          ],
+          popular: true,
+        },
+        {
+          name: "Advanced + Automation",
+          price: 9999,
+          idealFor: "Businesses that need automation and lead capture.",
+          features: [
+            "Everything in Standard plan",
+            "WhatsApp bot demo integration",
+            "Custom lead / enquiry forms",
+            "Basic dashboard or small custom tool",
+          ],
+          popular: false,
+        },
+      ];
+
+      const testimonials = [
+        {
+          name: "Store Owner",
+          role: "Local Retail Business",
+          quote:
+            "The website makes it much easier for customers to find our location, timings and services. The layout is clean and professional.",
+        },
+        {
+          name: "Coaching Institute Founder",
+          role: "IT Coaching Classes",
+          quote:
+            "The enquiry form and simple dashboard reduced a lot of manual work. Communication and follow-ups are more organized now.",
+        },
+        {
+          name: "Diploma IT Student",
+          role: "Final Year Project",
+          quote:
+            "The EduVerse-style project added strong value to my portfolio. The technical guidance was clear and easy to understand.",
+        },
+      ];
+
+      const faqs = [
+        {
+          q: "How much advance is required to start a project?",
+          a: "Typically, around 30% of the total package amount is taken as a small advance to start the work. The remaining amount is paid after the demo or final delivery.",
+        },
+        {
+          q: "How long does it take to build a website?",
+          a: "A basic website usually takes around 3–5 working days, while Standard or Advanced plans can take 7–10 days depending on requirements and content.",
+        },
+        {
+          q: "What if I don’t have content or images ready?",
+          a: "That’s completely fine. I can start with a suggested layout, reference sections and stock photos. You can replace them later with your own text and images.",
+        },
+        {
+          q: "Can I get both a website and a WhatsApp bot together?",
+          a: "Yes. In the Advanced package, both the website and a WhatsApp bot demo can be set up in a single integrated flow, along with basic automation.",
+        },
+      ];
+
+      const processSteps = [
+        {
+          title: "1. Quick call or chat",
+          desc: "Understand your business, goal, budget and timeline in simple language.",
+        },
+        {
+          title: "2. Wireframe & rough layout",
+          desc: "Prepare a clean structure of pages, sections and basic content.",
+        },
+        {
+          title: "3. Design & development",
+          desc: "Build responsive UI, connect forms, integrate APIs or WhatsApp bot.",
+        },
+        {
+          title: "4. Review, refine & launch",
+          desc: "Take your feedback, refine and deploy with a simple handover guide.",
+        },
+      ];
+
+      // ======================
+      // Reusable Components
+      // ======================
+
+      const Badge = ({ children }) => (
+        <span
+          className="inline-flex items-center rounded-full bg-primary/15 text-primary px-3 py-1 text-[11px] font-medium dark:bg-primary/25"
+        >
+          {children}
+        </span>
+      );
+
+      const SectionTitle = ({ eyebrow, title, subtitle }) => (
+        <div className="text-center mb-10">
+          {eyebrow && (
+            <p className="text-xs uppercase tracking-[0.25em] text-primary/80">
+              {eyebrow}
+            </p>
+          )}
+          <h2 className="text-3xl md:text-4xl font-semibold mt-2">{title}</h2>
+          {subtitle && (
+            <p className="mt-3 text-sm md:text-base text-slate-400 max-w-2xl mx-auto">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      );
+
+      const BackgroundDecor = () => (
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
+          <div
+            className="absolute inset-0 opacity-[0.05] mix-blend-soft-light"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
+            }}
+          ></div>
+          <div className="absolute -top-40 -right-32 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
+          <div className="absolute top-40 -left-40 h-64 w-64 rounded-full bg-secondary/25 blur-3xl" />
+          <div className="absolute bottom-[-6rem] right-1/4 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70" />
+        </div>
+      );
+
+      // ======================
+      // Navbar
+      // ======================
+
+      const Navbar = ({ theme, toggleTheme, activeSection }) => {
+        const [isOpen, setIsOpen] = useState(false);
+        const [scrolled, setScrolled] = useState(false);
+
+        const navItems = [
+          "Home",
+          "Skills",
+          "Projects",
+          "Services",
+          "Process",
+          "Pricing",
+          "About",
+          "Contact",
+        ];
+
+        useEffect(() => {
+          const onScroll = () => setScrolled(window.scrollY > 10);
+          window.addEventListener("scroll", onScroll);
+          return () => window.removeEventListener("scroll", onScroll);
+        }, []);
+
+        const handleNavClick = (id) => {
+          const el = document.getElementById(id.toLowerCase());
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+          setIsOpen(false);
+        };
+
+        return (
+          <nav
+            className={
+              "fixed top-0 left-0 right-0 z-40 border-b border-slate-800/60 bg-slate-900/70 backdrop-blur-xl transition-all " +
+              (scrolled ? "shadow-soft" : "")
+            }
+          >
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
+              <div className="flex items-center justify-between h-16">
+                {/* Brand */}
+                <div
+                  className="flex items-center gap-3 cursor-pointer"
+                  onClick={() => handleNavClick("home")}
+                >
+                  <img
+                    src="./logo.png"
+                    alt="Shubham Dev Studio Logo"
+                    className="h-10 w-10 object-contain select-none"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold leading-tight">
+                      Shubham Dev Studio
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Full Stack · Automation
+                    </p>
+                  </div>
+                </div>
+
+                {/* Desktop nav */}
+                <div className="hidden md:flex items-center gap-6">
+                  {navItems.map((item) => {
+                    const id = item.toLowerCase();
+                    const isActive = activeSection === id;
+                    return (
+                      <button
+                        key={item}
+                        onClick={() => handleNavClick(item)}
+                        className={
+                          "text-xs font-medium relative transition-colors " +
+                          (isActive
+                            ? "text-primary"
+                            : "text-slate-400 hover:text-slate-100")
+                        }
+                      >
+                        {item}
+                        {isActive && (
+                          <span className="absolute -bottom-1 left-0 right-0 mx-auto h-0.5 w-5 rounded-full bg-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={toggleTheme}
+                    className="h-9 w-9 flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900/70 hover:bg-slate-800 text-slate-100 transition-colors"
+                    aria-label="Toggle theme"
+                  >
+                    {theme === "dark" ? (
+                      <i className="ri-sun-line text-[18px] text-yellow-400" />
+                    ) : (
+                      <i className="ri-moon-line text-[18px]" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Mobile */}
+                <div className="flex items-center gap-2 md:hidden">
+                  <button
+                    onClick={toggleTheme}
+                    className="h-8 w-8 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-900"
+                    aria-label="Toggle theme"
+                  >
+                    {theme === "dark" ? (
+                      <i className="ri-sun-line text-[16px] text-yellow-400" />
+                    ) : (
+                      <i className="ri-moon-line text-[16px]" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="h-9 w-9 flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900"
+                    aria-label="Toggle menu"
+                  >
+                    <i
+                      className={
+                        isOpen
+                          ? "ri-close-line text-[20px]"
+                          : "ri-menu-line text-[20px]"
+                      }
+                    />
+                  </button>
+                </div>
+              </div>
+
+              {isOpen && (
+                <div className="md:hidden border-t border-slate-800/80 py-3 space-y-1">
+                  {navItems.map((item) => {
+                    const id = item.toLowerCase();
+                    const isActive = activeSection === id;
+                    return (
+                      <button
+                        key={item}
+                        onClick={() => handleNavClick(item)}
+                        className={
+                          "block w-full text-left text-sm py-1 " +
+                          (isActive ? "text-primary" : "text-slate-200")
+                        }
+                      >
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </nav>
+        );
+      };
+
+      // ======================
+      // Hero
+      // ======================
+
+      const HeroSection = ({ profileMode, setProfileMode }) => (
+        <section
+          id="home"
+          className="pt-24 md:pt-28 pb-12 md:pb-14 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <div className="relative">
+            <div className="grid md:grid-cols-2 gap-10 items-center">
+              {/* Left */}
+              <div className="fade-up">
+                <Badge>Full Stack Development · Automation</Badge>
+                <h1 className="mt-4 text-4xl md:text-6xl font-semibold tracking-tight leading-tight">
+                  I help{" "}
+                  <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                    students & businesses
+                  </span>{" "}
+                  build clean, modern web apps.
+                </h1>
+                <p className="mt-5 text-sm md:text-base text-slate-300 max-w-xl">
+                  I’m Shubham, a full stack developer from Maharashtra. I focus
+                  on practical products – portfolios, student projects and
+                  simple automation for local businesses using React, Node.js
+                  and modern tooling.
+                </p>
+
+                {/* Mode switch */}
+                <div className="mt-4 inline-flex items-center text-[11px] gap-2 bg-slate-900/70 border border-slate-700 rounded-full px-1 py-1">
+                  <span
+                    onClick={() => setProfileMode("client")}
+                    className={
+                      "px-3 py-1 rounded-full cursor-pointer " +
+                      (profileMode === "client"
+                        ? "bg-primary text-white"
+                        : "text-slate-400")
+                    }
+                  >
+                    For businesses
+                  </span>
+                  <span
+                    onClick={() => setProfileMode("student")}
+                    className={
+                      "px-3 py-1 rounded-full cursor-pointer " +
+                      (profileMode === "student"
+                        ? "bg-primary text-white"
+                        : "text-slate-400")
+                    }
+                  >
+                    For students
+                  </span>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primaryDark text-sm font-medium text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                  >
+                    <i className="ri-send-plane-line text-[16px]" />
+                    Discuss a project
+                  </a>
+                  <a
+                    href="#projects"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900/60 text-sm font-medium text-slate-100 hover:bg-slate-800"
+                  >
+                    <i className="ri-folder-2-line text-[16px]" />
+                    View selected work
+                  </a>
+                </div>
+
+                <div className="mt-6 grid grid-cols-3 gap-4 text-xs text-slate-400 max-w-md">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-100">
+                      3+ Major Projects
+                    </p>
+                    <p>Full stack and automation-focused.</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-100">
+                      Education & Tech
+                    </p>
+                    <p>Student-centric tools and portals.</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-100">
+                      Business Ready
+                    </p>
+                    <p>Websites and WhatsApp bot demos.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right card */}
+              <div className="relative fade-up-delay">
+                <div className="absolute -inset-0.5 rounded-[1.8rem] bg-gradient-to-tr from-primary/35 via-secondary/30 to-accent/25 opacity-60 blur-2xl" />
+                <div className="relative rounded-[1.6rem] border border-slate-800 bg-slate-900/90 backdrop-blur-2xl p-6 shadow-soft">
+                  <p className="text-[11px] text-slate-400 mb-1">
+                    Currently building
+                  </p>
+                  <p className="text-lg font-semibold text-slate-100">
+                    CricSpectra & EduVerse
+                  </p>
+                  <p className="mt-2 text-[12px] text-slate-300">
+                    Live cricket dashboards and a diploma IT learning portal –
+                    both built with React, Node.js, Express and MongoDB, focused
+                    on real-world use.
+                  </p>
+
+                  <div className="mt-4 grid grid-cols-2 gap-4 text-[11px] text-slate-300">
+                    <div className="rounded-2xl bg-slate-900/80 border border-slate-700 p-3">
+                      <p className="text-[10px] text-slate-400 mb-1">Role</p>
+                      <p className="font-semibold text-slate-100">
+                        Full Stack Developer
+                      </p>
+                      <p className="mt-1 text-[11px] text-slate-400">
+                        Frontend, backend & integrations.
+                      </p>
+                    </div>
+                    <div className="rounded-2xl bg-slate-900/80 border border-slate-700 p-3">
+                      <p className="text-[10px] text-slate-400 mb-1">
+                        Core stack
+                      </p>
+                      <p className="text-[11px] text-slate-200 mt-1">
+                        React · Node.js · Express · MongoDB · Tailwind
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-[11px] text-slate-400 flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <i className="ri-map-pin-line" /> Maharashtra, India
+                    </span>
+                    <span className="flex items-center gap-2 text-[15px]">
+                      <i className="ri-github-fill cursor-pointer hover:text-white" />
+                      <i className="ri-linkedin-box-fill cursor-pointer hover:text-white" />
+                      <i className="ri-mail-line cursor-pointer hover:text-white" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Stats strip
+      // ======================
+
+      const StatsStrip = () => (
+        <section className="max-w-6xl mx-auto px-4 md:px-6 pb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-lg p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                <i className="ri-code-line text-primary text-[20px]" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Experience</p>
+                <p className="text-lg font-semibold text-slate-100">
+                  3+ years coding
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-secondary/15 flex items-center justify-center">
+                <i className="ri-layout-4-line text-secondary text-[20px]" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Project types</p>
+                <p className="text-lg font-semibold text-slate-100">
+                  Web · APIs · Bots
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-accent/15 flex items-center justify-center">
+                <i className="ri-team-line text-accent text-[20px]" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-400">Working with</p>
+                <p className="text-lg font-semibold text-slate-100">
+                  Students & SMBs
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Skills & Stack
+      // ======================
+
+      const SkillsSection = () => (
+        <section
+          id="skills"
+          className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <SectionTitle
+            eyebrow="Skills"
+            title="Tech stack & capabilities"
+            subtitle="Technologies and tools I use to design, build and ship production-ready apps."
+          />
+          <div className="grid lg:grid-cols-[1.4fr,1fr] gap-6 items-start">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+              {skills.map((skill) => (
+                <div
+                  key={skill.name}
+                  className="rounded-2xl border border-slate-700/80 bg-slate-900/80 backdrop-blur-lg p-4 hover:-translate-y-1 hover:shadow-soft hover:border-primary/70 transition-all duration-200"
+                >
+                  <p className="text-sm font-semibold text-slate-100">
+                    {skill.name}
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">{skill.level}</p>
+                  <div className="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full w-3/4 bg-gradient-to-r from-primary via-secondary to-accent" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-2xl border border-slate-700/80 bg-slate-900/80 backdrop-blur-lg p-4">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-400 mb-2">
+                TECH STACK
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {stack.map((item) => (
+                  <span
+                    key={item}
+                    className="px-3 py-1.5 rounded-full border border-slate-700 text-[11px] text-slate-200 bg-slate-900/80 hover:border-primary/60 hover:text-primary transition-colors"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Projects
+      // ======================
+
+      const ProjectsSection = () => {
+        const [filter, setFilter] = useState("All");
+        const filters = ["All", "Sports", "Education", "Automation", "Business"];
+
+        const filteredProjects =
+          filter === "All"
+            ? projects
+            : projects.filter((p) => p.category === filter);
+
+        return (
+          <section
+            id="projects"
+            className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+          >
+            <SectionTitle
+              eyebrow="Projects"
+              title="Selected work"
+              subtitle="A small selection of projects that show my approach to building real-world products."
+            />
+
+            <div className="flex flex-wrap justify-center gap-2 mb-6">
+              {filters.map((f) => {
+                const active = f === filter;
+                return (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={
+                      "px-3 py-1.5 rounded-full text-xs font-medium border transition-all " +
+                      (active
+                        ? "bg-primary text-white border-primary shadow-soft"
+                        : "bg-slate-900/70 text-slate-200 border-slate-700 hover:border-primary/60")
+                    }
+                  >
+                    {f}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+              {filteredProjects.map((project) => (
+                <article
+                  key={project.title}
+                  className="group rounded-2xl border border-slate-700/80 bg-slate-900/90 backdrop-blur-xl p-5 flex flex-col justify-between hover:border-primary/70 hover:-translate-y-1 hover:shadow-soft transition-all duration-200"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge>{project.tag}</Badge>
+                      <span className="text-[11px] text-slate-400">
+                        {project.role}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-slate-100 group-hover:text-primary">
+                      {project.title}
+                    </h3>
+                    <p className="mt-2 text-xs md:text-sm text-slate-300">
+                      {project.description}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="text-[11px] px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-slate-200"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mt-4 flex gap-3 text-xs">
+                    <a
+                      href={project.linkDemo}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-primary/70 text-primary group-hover:bg-primary/10"
+                    >
+                      <i className="ri-external-link-line text-[13px]" />
+                      Live demo
+                    </a>
+                    <a
+                      href={project.linkCode}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-100 bg-slate-900/80 hover:bg-slate-800"
+                    >
+                      <i className="ri-github-line text-[13px]" />
+                      Source code
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        );
+      };
+
+      // ======================
+      // Services
+      // ======================
+
+      const ServicesSection = () => (
+        <section
+          id="services"
+          className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <SectionTitle
+            eyebrow="Services"
+            title="How I can help"
+            subtitle="From websites to automations, I focus on simple, effective and maintainable solutions."
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            {services.map((s) => (
+              <div
+                key={s.title}
+                className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-soft hover:border-primary/70 transition-all duration-200"
+              >
+                <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                  <i className={`${s.icon} text-[20px] text-primary`} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-100">
+                    {s.title}
+                  </h3>
+                  <p className="mt-1 text-xs md:text-sm text-slate-300">
+                    {s.description}
+                  </p>
+                </div>
+                <span className="mt-auto text-[11px] text-primary inline-flex items-center gap-1">
+                  Available for this service
+                  <i className="ri-arrow-right-up-line text-[13px]" />
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Process Section
+      // ======================
+
+      const ProcessSection = () => (
+        <section
+          id="process"
+          className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <SectionTitle
+            eyebrow="Process"
+            title="Simple, guided process"
+            subtitle="A clear step-by-step approach so you always know what is happening and what comes next."
+          />
+          <div className="grid md:grid-cols-4 gap-4 md:gap-5">
+            {processSteps.map((step, idx) => (
+              <div
+                key={step.title}
+                className="relative rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4"
+              >
+                <div className="absolute -top-3 left-4 h-6 w-6 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[12px] text-slate-300">
+                  {idx + 1}
+                </div>
+                <h3 className="mt-3 text-sm font-semibold text-slate-100">
+                  {step.title}
+                </h3>
+                <p className="mt-1 text-xs text-slate-300">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Testimonials
+      // ======================
+
+      const TestimonialsSection = () => (
+        <section
+          id="testimonials"
+          className="pb-12 md:pb-16 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <SectionTitle
+            eyebrow="Testimonials"
+            title="Feedback"
+            subtitle="Short feedback from people who have used my work in their business or projects."
+          />
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+            {testimonials.map((t) => (
+              <div
+                key={t.name}
+                className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4 flex flex-col gap-3 shadow-sm"
+              >
+                <p className="text-xs md:text-sm text-slate-200 italic leading-relaxed">
+                  “{t.quote}”
+                </p>
+                <div className="mt-2 text-xs">
+                  <p className="font-semibold text-slate-100">{t.name}</p>
+                  <p className="text-slate-400">{t.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+
+      // ======================
+      // Pricing & Payment (Razorpay placeholder)
+      // ======================
+
+      const PricingPaymentSection = () => {
+        const handlePay = (amount, planName) => {
+          // Razorpay frontend only – backend verification will be added later
+          if (!window.Razorpay) {
+            alert(
+              "Payment gateway is not configured yet. You can use the UPI details below for manual payment."
+            );
+            return;
+          }
+
+          const options = {
+            key: "rzp_test_yourKeyHere", // replace with your TEST Key when you actually enable payments
+            amount: amount * 100,
+            currency: "INR",
+            name: "Shubham - Web & Automation",
+            description: `Advance payment for ${planName}`,
+            handler: function (response) {
+              alert(
+                "Payment successful! Payment ID: " +
+                  response.razorpay_payment_id +
+                  "\nIn production, this should be verified on your backend."
+              );
+            },
+            prefill: {
+              name: "Client",
+              email: "shubhamindalkar07@gmail.com",
+              contact: "9172563648",
+            },
+            theme: {
+              color: "#6366f1",
+            },
+          };
+
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        };
+
+        return (
+          <section
+            id="pricing"
+            className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+          >
+            <SectionTitle
+              eyebrow="Pricing & Payment"
+              title="Straightforward pricing"
+              subtitle="Start with a small advance to confirm the project. The remaining amount is paid after the demo or final delivery."
+            />
+
+            <div className="grid md:grid-cols-3 gap-5 md:gap-6">
+              {pricingPlans.map((plan) => (
+                <div
+                  key={plan.name}
+                  className={
+                    "relative rounded-2xl border bg-slate-900/85 backdrop-blur-xl p-5 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-soft transition-all duration-200 " +
+                    (plan.popular
+                      ? "border-primary shadow-soft ring-1 ring-primary/40"
+                      : "border-slate-700/80")
+                  }
+                >
+                  {plan.popular && (
+                    <span className="absolute -top-2 right-3 text-[10px] px-2 py-0.5 rounded-full bg-primary text-white">
+                      Most popular
+                    </span>
+                  )}
+                  <h3 className="text-sm font-semibold text-slate-100">
+                    {plan.name}
+                  </h3>
+                  <p className="text-xs text-slate-400">{plan.idealFor}</p>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-2xl font-semibold text-slate-100">
+                      ₹{plan.price}
+                    </span>
+                    <span className="text-[11px] text-slate-400">
+                      one-time
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Typical advance:
+                    <span className="font-semibold">
+                      {" "}
+                      ₹{Math.round(plan.price / 3)}
+                    </span>{" "}
+                    to start the work.
+                  </p>
+                  <ul className="mt-2 space-y-1 text-xs text-slate-200">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex gap-2">
+                        <i className="ri-check-line text-[14px] text-accent mt-[1px]" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() =>
+                      handlePay(Math.round(plan.price / 3), plan.name)
+                    }
+                    className="mt-4 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-primary hover:bg-primaryDark text-xs font-medium text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                  >
+                    <i className="ri-bank-card-line text-[14px]" />
+                    Pay advance & reserve slot
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-dashed border-slate-700 bg-slate-900/80 backdrop-blur-xl p-4 text-xs md:text-sm text-slate-200">
+              <p className="font-semibold mb-1 flex items-center gap-2">
+                <i className="ri-information-line text-[16px] text-primary" />
+                Alternative payment options
+              </p>
+              <p>
+                You can also make a direct payment using{" "}
+                <span className="font-semibold">UPI / GPay / PhonePe</span> and
+                share the payment screenshot on WhatsApp.
+              </p>
+              <ul className="mt-2 space-y-1">
+                <li className="flex items-center gap-2">
+                  <i className="ri-qr-code-line text-[16px]" />
+                  <span>
+                    UPI ID:{" "}
+                    <span className="font-semibold">
+                      shubzcreation610@okaxis
+                    </span>
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="ri-whatsapp-line text-[16px] text-accent" />
+                  <span>
+                    After payment, send details on WhatsApp:{" "}
+                    <span className="font-semibold">+91-9172563648</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>
+        );
+      };
+
+      // ======================
+      // FAQ Section
+      // ======================
+
+      const FAQSection = () => {
+        const [openIndex, setOpenIndex] = useState(0);
+
+        const toggle = (idx) => {
+          setOpenIndex((prev) => (prev === idx ? -1 : idx));
+        };
+
+        return (
+          <section
+            id="faq"
+            className="pb-12 md:pb-16 max-w-4xl mx-auto px-4 md:px-6"
+          >
+            <SectionTitle
+              eyebrow="FAQ"
+              title="Frequently asked questions"
+              subtitle="Short answers to common questions before starting a project."
+            />
+            <div className="space-y-3">
+              {faqs.map((item, idx) => {
+                const open = openIndex === idx;
+                return (
+                  <div
+                    key={item.q}
+                    className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl px-4 py-3"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggle(idx)}
+                      className="w-full flex items-center justify-between gap-3 text-left"
+                    >
+                      <p className="text-xs md:text-sm font-medium text-slate-100">
+                        {item.q}
+                      </p>
+                      <i
+                        className={
+                          "text-[18px] text-slate-400 transition-transform " +
+                          (open ? "ri-subtract-line" : "ri-add-line")
+                        }
+                      />
+                    </button>
+                    {open && (
+                      <p className="mt-2 text-xs md:text-sm text-slate-300">
+                        {item.a}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        );
+      };
+
+      // ======================
+      // About
+      // ======================
+
+      const AboutSection = () => (
+        <section
+          id="about"
+          className="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6"
+        >
+          <SectionTitle
+            eyebrow="About"
+            title="About me"
+            subtitle="A quick introduction to who I am and how I approach projects."
+          />
+          <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-start">
+            <div className="space-y-3 text-sm md:text-base text-slate-200">
+              <p>
+                I'm Shubham, a full stack web developer from Maharashtra, India.
+                I enjoy building practical, real-world products—websites for
+                small businesses, portals for students and sports-related
+                applications.
+              </p>
+              <p>
+                I've worked on projects like{" "}
+                <span className="font-semibold">CricSpectra</span> (a cricket
+                scores and analytics platform) and{" "}
+                <span className="font-semibold">EduVerse</span> (a learning
+                portal for diploma IT students). I am also exploring{" "}
+                <span className="font-semibold">
+                  WhatsApp bots and automation
+                </span>{" "}
+                so that businesses can respond faster and handle more customers
+                with less manual work.
+              </p>
+              <p>
+                If you are a small business owner, a student, or someone with an
+                idea but no technical background, I can help you turn that idea
+                into a clean, working website or tool with a focus on clarity
+                and usability.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-xs md:text-sm">
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4">
+                <p className="text-[11px] text-slate-400">Focus</p>
+                <p className="mt-1 font-semibold text-slate-100">
+                  Web & Automation
+                </p>
+                <p className="mt-1 text-slate-300">
+                  Full stack apps, APIs and WhatsApp bots for practical use
+                  cases.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4">
+                <p className="text-[11px] text-slate-400">Collaboration</p>
+                <p className="mt-1 font-semibold text-slate-100">
+                  Open to projects
+                </p>
+                <p className="mt-1 text-slate-300">
+                  Happy to work with local businesses, startups and students.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4">
+                <p className="text-[11px] text-slate-400">Communication</p>
+                <p className="mt-1 font-semibold text-slate-100">
+                  Clear & simple
+                </p>
+                <p className="mt-1 text-slate-300">
+                  I explain technical details in simple, easy-to-understand
+                  language.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-4">
+                <p className="text-[11px] text-slate-400">Next steps</p>
+                <p className="mt-1 font-semibold text-slate-100">
+                  Product mindset
+                </p>
+                <p className="mt-1 text-slate-300">
+                  Evolving CricSpectra, EduVerse and bot demos into usable
+                  products.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      // =======================
+      // Contact Section (Connected to PHP API)
+      // =======================
+
+      const ContactSection = () => {
+        const [form, setForm] = React.useState({
+          name: "",
+          contact: "",
+          need: "",
+          message: "",
+        });
+
+        const handleChange = (e) => {
+          const { name, value } = e.target;
+          setForm((prev) => ({ ...prev, [name]: value }));
+        };
+
+        const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!form.name || !form.contact || !form.need) {
+    alert("Please fill in Name, Email/WhatsApp and What you need.");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      "http://localhost/shubhamdevstudio-api/save_enquiry.php",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      }
+    );
+
+    const data = await res.json(); // <- response JSON मिळतो
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || "Failed to submit enquiry");
+    }
+
+    alert("Enquiry submitted successfully! I will get back to you soon.");
+
+    setForm({ name: "", contact: "", need: "", message: "" });
+  } catch (err) {
+    console.error(err);
+    alert("Server error while submitting enquiry. Please try again later.");
+  }
+};
+
+        return (
+          <section
+            id="contact"
+            className="py-12 md:py-16 max-w-4xl mx-auto px-4 md:px-6"
+          >
+            <SectionTitle
+              eyebrow="Contact"
+              title="Let’s talk"
+              subtitle="If you’re interested in a website, automation or project collaboration, share a few details and I’ll get back to you."
+            />
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left info section */}
+              <div className="space-y-3 text-sm md:text-base text-slate-200">
+                <p>I can help you with:</p>
+                <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
+                  <li>
+                    Websites for shops, coaching classes, gyms or institutes
+                  </li>
+                  <li>WhatsApp bot demos and automation</li>
+                  <li>Custom tools like billing, attendance or dashboards</li>
+                  <li>Student projects (frontend, backend, APIs)</li>
+                </ul>
+
+                <div className="mt-3 space-y-1 text-sm">
+                  <p className="flex items-center gap-2">
+                    <i className="ri-mail-line text-[16px] text-primary" />
+                    <span>shubhamindalkar07@gmail.com</span>
+                  </p>
+
+                  <p className="flex items-center gap-2">
+                    <i className="ri-whatsapp-line text-[16px] text-accent" />
+                    <span>+91-9172563648</span>
+                  </p>
+
+                  <p className="flex items-center gap-2">
+                    <i className="ri-map-pin-line text-[16px] text-secondary" />
+                    <span>Maharashtra, India</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Form */}
+              <form
+                onSubmit={handleSubmit}
+                className="rounded-2xl border border-slate-700/80 bg-slate-900/85 backdrop-blur-xl p-5 space-y-4 shadow-sm"
+              >
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your name"
+                    className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary text-slate-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">
+                    Email / WhatsApp
+                  </label>
+                  <input
+                    type="text"
+                    name="contact"
+                    value={form.contact}
+                    onChange={handleChange}
+                    required
+                    placeholder="your@email.com / +91..."
+                    className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary text-slate-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">
+                    What do you need?
+                  </label>
+                  <select
+                    name="need"
+                    value={form.need}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="" disabled>
+                      Select an option
+                    </option>
+                    <option>Website for my business</option>
+                    <option>WhatsApp bot / automation</option>
+                    <option>Custom tool / software</option>
+                    <option>Help with student project</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-200 mb-1">
+                    Message
+                  </label>
+                  <textarea
+                    rows="3"
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    placeholder="Briefly describe your idea or requirement..."
+                    className="w-full rounded-lg bg-slate-950 border border-slate-700 px-3 py-2 text-sm text-slate-100 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primaryDark text-sm font-medium text-white shadow-soft transition-transform hover:-translate-y-0.5"
+                >
+                  <i className="ri-send-plane-line text-[16px]" />
+                  Submit enquiry
+                </button>
+              </form>
+            </div>
+          </section>
+        );
+      };
+
+      // ======================
+      // Footer + Floating Buttons
+      // ======================
+
+      const Footer = () => (
+        <footer className="border-t border-slate-800 bg-slate-950/90 py-4 mt-6 backdrop-blur-xl">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-2">
+            <p className="text-[11px] text-slate-500">
+              © {new Date().getFullYear()} Shubham Dev Studio. Designed and
+              built with React & Tailwind CSS.
+            </p>
+            <div className="flex items-center gap-3 text-[15px] text-slate-400">
+              <i className="ri-github-fill cursor-pointer hover:text-white" />
+              <i className="ri-linkedin-box-fill cursor-pointer hover:text-white" />
+              <i className="ri-mail-line cursor-pointer hover:text-white" />
+            </div>
+          </div>
+        </footer>
+      );
+
+      const ScrollToTopButton = () => {
+        const [visible, setVisible] = useState(false);
+
+        useEffect(() => {
+          const onScroll = () => setVisible(window.scrollY > 300);
+          window.addEventListener("scroll", onScroll);
+          return () => window.removeEventListener("scroll", onScroll);
+        }, []);
+
+        if (!visible) return null;
+
+        return (
+          <button
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+            className="fixed bottom-6 right-5 h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center shadow-soft border border-primary/80 hover:bg-primaryDark transition-transform hover:-translate-y-0.5 text-[18px] z-40"
+          >
+            <i className="ri-arrow-up-line" />
+          </button>
+        );
+      };
+
+      const FloatingWhatsAppButton = () => (
+        <a
+          href="https://wa.me/919172563648?text=Hi%20Shubham,%20I%27d%20like%20to%20discuss%20a%20website%20or%20automation%20project."
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-20 right-5 h-11 w-11 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-soft border border-emerald-400 hover:bg-emerald-600 transition-transform hover:-translate-y-0.5 text-[20px] z-40"
+        >
+          <i className="ri-whatsapp-line" />
+        </a>
+      );
+
+      // ======================
+      // Main App
+      // ======================
+
+      const App = () => {
+        const [theme, setTheme] = useState("dark");
+        const [activeSection, setActiveSection] = useState("home");
+        const [profileMode, setProfileMode] = useState("client");
+
+        useEffect(() => {
+          const stored = localStorage.getItem("theme");
+          if (stored === "light" || stored === "dark") {
+            setTheme(stored);
+            if (stored === "dark") {
+              document.documentElement.classList.add("dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+            }
+          } else {
+            document.documentElement.classList.add("dark");
+          }
+        }, []);
+
+        useEffect(() => {
+          const sections = [
+            "home",
+            "skills",
+            "projects",
+            "services",
+            "process",
+            "pricing",
+            "about",
+            "contact",
+          ];
+          const handler = () => {
+            const scrollY = window.scrollY;
+            let current = "home";
+            for (const id of sections) {
+              const el = document.getElementById(id);
+              if (el) {
+                const offsetTop = el.offsetTop - 90;
+                if (scrollY >= offsetTop) current = id;
+              }
+            }
+            setActiveSection(current);
+          };
+          window.addEventListener("scroll", handler);
+          handler();
+          return () => window.removeEventListener("scroll", handler);
+        }, []);
+
+        const toggleTheme = () => {
+          const next = theme === "dark" ? "light" : "dark";
+          setTheme(next);
+          localStorage.setItem("theme", next);
+          if (next === "dark") {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        };
+
+        return (
+          <div className="relative min-h-screen text-slate-100">
+            <BackgroundDecor />
+            <Navbar
+              theme={theme}
+              toggleTheme={toggleTheme}
+              activeSection={activeSection}
+            />
+            <main className="relative">
+              <HeroSection
+                profileMode={profileMode}
+                setProfileMode={setProfileMode}
+              />
+              <StatsStrip />
+              <SkillsSection />
+              <ProjectsSection />
+              <ServicesSection />
+              <ProcessSection />
+              <TestimonialsSection />
+              <PricingPaymentSection />
+              <FAQSection />
+              <AboutSection />
+              <ContactSection />
+            </main>
+            <Footer />
+            <ScrollToTopButton />
+            <FloatingWhatsAppButton />
+          </div>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
